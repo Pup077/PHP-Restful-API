@@ -1,0 +1,8 @@
+CREATE DATABASE nodeJsResful CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE TABLE books(
+ 	id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name varchar(100) NOT NULL,
+    author varchar(100) NOT NULL,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
