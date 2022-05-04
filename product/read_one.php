@@ -28,10 +28,9 @@ if($product->name!=null){
     $product_arr = array(
         "id" =>  $product->id,
         "name" => $product->name,
-        "author" => $product->author,
-        "created_at" => $product->created_at,
-        "updated_at" => $product->updated_at
-        // "category_name" => $product->category_name
+        "phone" => $product->phone,
+        "email" => $product->email,
+        "country" => $product->country
   
     );
   

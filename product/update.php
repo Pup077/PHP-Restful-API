@@ -25,9 +25,9 @@ $product->id = $data->id;
   
 // set product property values
 $product->name = $data->name;
-$product->author = $data->author;
-// $product->description = $data->description;
-// $product->category_id = $data->category_id;
+$product->phone = $data->phone;
+$product->email = $data->email;
+$product->country = $data->country;
   
 // update the product
 if($product->update()){

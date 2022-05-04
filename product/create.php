@@ -23,12 +23,17 @@ $data = json_decode(file_get_contents("php://input"));
 // make sure data is not empty
 if(
     !empty($data->name) &&
-    !empty($data->author) 
+    !empty($data->phone) &&
+    !empty($data->email) &&
+    !empty($data->country)
 ){
   
     // set product property values
     $product->name = $data->name;
-    $product->author = $data->author;
+    $product->phone = $data->phone;
+    $product->email = $data->email;
+    $product->country = $data->country;
+    // $product->created = date('Y-m-d H:i:s');
   
     // create the product
     if($product->create()){

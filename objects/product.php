@@ -3,25 +3,25 @@ class Product{
   
     // database connection and table name
     private $conn;
-    private $table_name = "books";
+    private $table_name = "customers";
   
     // object properties
     public $id;
     public $name;
-    public $author;
-    public $created_at;
-    public $updated_at;
+    public $phone;
+    public $email;
+    public $country;
   
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
     }
 
-    // read books
+    // read products
     function read(){
     
         // select all query
-        $query = "SELECT * FROM books";
+        $query = "SELECT * FROM customers";
     
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -33,7 +33,8 @@ class Product{
     }
     function readOne(){
   
-        $query = "SELECT * FROM books WHERE id = ? LIMIT 0,1";
+        // query to read single record
+        $query = "SELECT * FROM customers WHERE id = ?";
       
         // prepare query statement
         $stmt = $this->conn->prepare( $query );
@@ -49,9 +50,9 @@ class Product{
       
         // set values to object properties
         $this->name = $row['name'];
-        $this->created_at = $row['created_at'];
-        $this->author = $row['author'];
-        $this->updated_at = $row['updated_at'];
+        $this->phone = $row['phone'];
+        $this->email = $row['email'];
+        $this->country = $row['country'];
         // $this->category_name = $row['category_name'];
     }
 
@@ -63,7 +64,9 @@ class Product{
                     " . $this->table_name . "
                 SET
                     name = :name,
-                    author = :author
+                    phone = :phone,
+                    email = :email,
+                    country = :country
                 WHERE
                     id = :id";
     
@@ -72,12 +75,16 @@ class Product{
     
         // sanitize
         $this->name=htmlspecialchars(strip_tags($this->name));
-        $this->author=htmlspecialchars(strip_tags($this->author));
+        $this->phone=htmlspecialchars(strip_tags($this->phone));
+        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->country=htmlspecialchars(strip_tags($this->country));
         $this->id=htmlspecialchars(strip_tags($this->id));
     
         // bind new values
         $stmt->bindParam(':name', $this->name);
-        $stmt->bindParam(':author', $this->author);
+        $stmt->bindParam(':phone', $this->phone);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':country', $this->country);
         $stmt->bindParam(':id', $this->id);
     
         // execute the query
@@ -111,77 +118,12 @@ class Product{
         return false;
     }
 
-    // search books
-    function search($keywords){
+    // search products
+  
+    // read products with pagination
     
-        // select all query
-        $query = "SELECT
-                    c.name as category_name, p.id, p.name, p.author, p.created_at, p.updated_at, p.created
-                FROM
-                    " . $this->table_name . " p
-                    LEFT JOIN
-                        categories c
-                            ON p.updated_at = c.id
-                WHERE
-                    p.name LIKE ? OR p.author LIKE ? OR c.name LIKE ?
-                ORDER BY
-                    p.created DESC";
+    // used for paging products
     
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
-    
-        // sanitize
-        $keywords=htmlspecialchars(strip_tags($keywords));
-        $keywords = "%{$keywords}%";
-    
-        // bind
-        $stmt->bindParam(1, $keywords);
-        $stmt->bindParam(2, $keywords);
-        $stmt->bindParam(3, $keywords);
-    
-        // execute query
-        $stmt->execute();
-    
-        return $stmt;
-    }
-
-    // read books with pagination
-    public function readPaging($from_record_num, $records_per_page){
-    
-        // select query
-        $query = "SELECT
-                    c.name as category_name, p.id, p.name, p.author, p.created_at, p.updated_at, p.created
-                FROM
-                    " . $this->table_name . " p
-                    LEFT JOIN
-                        categories c
-                            ON p.updated_at = c.id
-                ORDER BY p.created DESC
-                LIMIT ?, ?";
-    
-        // prepare query statement
-        $stmt = $this->conn->prepare( $query );
-    
-        // bind variable values
-        $stmt->bindParam(1, $from_record_num, PDO::PARAM_INT);
-        $stmt->bindParam(2, $records_per_page, PDO::PARAM_INT);
-    
-        // execute query
-        $stmt->execute();
-    
-        // return values from database
-        return $stmt;
-    }
-    // used for paging books
-    public function count(){
-        $query = "SELECT COUNT(*) as total_rows FROM " . $this->table_name . "";
-    
-        $stmt = $this->conn->prepare( $query );
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        return $row['total_rows'];
-    }
     // create product
     function create(){
     
@@ -189,19 +131,24 @@ class Product{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    name=:name, author=:author";
+                    name=:name, phone=:phone,email=:email,country=:country";
     
         // prepare query
         $stmt = $this->conn->prepare($query);
     
         // sanitize
         $this->name=htmlspecialchars(strip_tags($this->name));
-        $this->author=htmlspecialchars(strip_tags($this->author));
-
+        $this->phone=htmlspecialchars(strip_tags($this->phone));
+        $this->country=htmlspecialchars(strip_tags($this->country));
+        $this->email=htmlspecialchars(strip_tags($this->email));
+        // $this->created=htmlspecialchars(strip_tags($this->created));
     
         // bind values
         $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":author", $this->author);
+        $stmt->bindParam(":phone", $this->phone);
+        $stmt->bindParam(":country", $this->country);
+        $stmt->bindParam(":email", $this->email);
+        // $stmt->bindParam(":created", $this->created);
     
         // execute query
         if($stmt->execute()){

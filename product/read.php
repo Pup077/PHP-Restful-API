@@ -33,20 +33,16 @@ if($num>0){
     // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         // extract row
-        // this will make $row['name'] to
-        // just $name only
+        // this will make $row['user_username'] to
+        // just $user_username only
         extract($row);
   
         $product_item=array(
             "id" => $id,
             "name" => $name,
-            "author" => $author,
-            "created_at" => $created_at,
-            "updated_at" => $updated_at
-            // "description" => html_entity_decode($description),
-            // "price" => $price,
-            // "category_id" => $category_id,
-            // "category_name" => $category_name
+            "phone" => $phone,
+            "email" => $email,
+            "country => $country"
         );
   
         array_push($products_arr["records"], $product_item);
